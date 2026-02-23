@@ -11,7 +11,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.platform.driverapp"
+      "bundleIdentifier": "com.platform.driverapp1"
     },
     "android": {
       "adaptiveIcon": {
