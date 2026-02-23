@@ -36,6 +36,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "asconcierges@gmail.com",
+        "ascAppId": "6759551318",
+        "appleTeamId": "QQ482WQ97D"
+      }
+    }
   }
 }
