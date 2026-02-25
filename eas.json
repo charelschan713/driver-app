@@ -1,46 +1,25 @@
 {
-  "cli": {
-    "version": ">= 10.0.0"
-  },
+  "cli": { "version": ">= 10.0.0" },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "ios": {
-        "simulator": true
-      },
-      "android": {
-        "buildType": "apk"
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://backend-production-79310.up.railway.app",
+        "EXPO_PUBLIC_TENANT_SLUG": "aschauffeured"
       }
     },
     "preview": {
       "distribution": "internal",
-      "ios": {
-        "simulator": false
-      },
-      "android": {
-        "buildType": "apk"
-      },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://chauffeur-saas-production.up.railway.app"
+        "EXPO_PUBLIC_API_URL": "https://backend-production-79310.up.railway.app",
+        "EXPO_PUBLIC_TENANT_SLUG": "aschauffeured"
       }
     },
     "production": {
-      "distribution": "store",
-      "android": {
-        "buildType": "app-bundle"
-      },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://chauffeur-saas-production.up.railway.app"
-      }
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "appleId": "asconcierges@gmail.com",
-        "ascAppId": "6759551318",
-        "appleTeamId": "QQ482WQ97D"
+        "EXPO_PUBLIC_API_URL": "https://backend-production-79310.up.railway.app",
+        "EXPO_PUBLIC_TENANT_SLUG": "aschauffeured"
       }
     }
   }
