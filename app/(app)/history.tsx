@@ -15,8 +15,8 @@ export default function HistoryScreen() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['driver-history'],
     queryFn: async () => {
-      const res = await api.get('/bookings/driver', {
-        params: { driver_status: 'JOB_DONE', limit: 50 },
+      const res = await api.get('/driver-app/assignments', {
+        params: { filter: 'completed' },
       });
       return res.data?.data ?? res.data ?? [];
     },

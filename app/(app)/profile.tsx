@@ -35,7 +35,7 @@ export default function ProfileScreen() {
   const { data: driver } = useQuery({
     queryKey: ['driver-profile'],
     queryFn: async () => {
-      const res = await api.get('/drivers/me');
+      const res = await api.get('/driver-app/me');
       return res.data;
     },
   });
@@ -53,7 +53,7 @@ export default function ProfileScreen() {
 
   const verifyAbnMutation = useMutation({
     mutationFn: async () => {
-      const res = await api.post('/invoices/verify-abn', { abn });
+      const res = await api.post('/driver-app/verify-abn', { abn });
       return res.data;
     },
     onSuccess: (data) => {
@@ -71,7 +71,7 @@ export default function ProfileScreen() {
 
   const saveDetailsMutation = useMutation({
     mutationFn: () =>
-      api.patch('/drivers/me/banking', {
+      api.patch('/driver-app/me/banking', {
         abn,
         bank_bsb: bankBsb,
         bank_account: bankAccount,

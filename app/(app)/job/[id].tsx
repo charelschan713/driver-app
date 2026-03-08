@@ -51,7 +51,7 @@ export default function JobDetailScreen() {
   const { data: booking, isLoading } = useQuery({
     queryKey: ['driver-job', id],
     queryFn: async () => {
-      const res = await api.get(`/bookings/driver/${id}`);
+      const res = await api.get(`/driver-app/assignments/${id}`);
       return res.data;
     },
     refetchInterval: 10000,
@@ -59,19 +59,7 @@ export default function JobDetailScreen() {
 
   const updateStatusMutation = useMutation({
     mutationFn: async (next_status: string) => {
-      const endpoint =
-        next_status === 'ON_THE_WAY'
-          ? `/bookings/driver/${id}/on-the-way`
-          : next_status === 'ARRIVED'
-            ? `/bookings/driver/${id}/arrived`
-            : next_status === 'PASSENGER_ON_BOARD'
-              ? `/bookings/driver/${id}/passenger-on-board`
-              : next_status === 'JOB_DONE'
-                ? `/bookings/driver/${id}/job-done`
-                : null;
-
-      if (!endpoint) throw new Error('Invalid status');
-      return api.patch(endpoint);
+      return api.patch(`/driver-app/assignments/${id}/status`, { new_status: next_status });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-job', id] });

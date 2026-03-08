@@ -35,9 +35,9 @@ export async function registerPushToken() {
 
   // 注册到后端
   try {
-    await api.post('/notifications/push-token', {
-      push_token: token,
-      device_type: 'ios',
+    await api.post('/driver-app/apns-token', {
+      token,
+      platform: 'expo',
     });
     console.log('Push token registered:', token);
   } catch (err) {

@@ -1,7 +1,43 @@
-import { Tabs } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { Tabs, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
+import { useQueryClient } from '@tanstack/react-query';
+
+// Handle notifications while app is foregrounded
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function AppLayout() {
+  const queryClient = useQueryClient();
+  const notificationListener = useRef<any>();
+  const responseListener = useRef<any>();
+
+  useEffect(() => {
+    // Foreground notification received → refresh jobs list
+    notificationListener.current = Notifications.addNotificationReceivedListener(() => {
+      queryClient.invalidateQueries({ queryKey: ['driver-active-jobs'] });
+    });
+
+    // User taps notification → navigate to job detail
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as any;
+      if (data?.assignment_id) {
+        router.push(`/(app)/job/${data.assignment_id}`);
+      }
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, [queryClient]);
+
   return (
     <Tabs
       screenOptions={{

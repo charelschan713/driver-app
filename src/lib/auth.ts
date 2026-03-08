@@ -7,13 +7,14 @@ export async function login(email: string, password: string) {
     password,
   });
 
-  const { access_token, user } = res.data;
+  // Backend returns accessToken (camelCase)
+  const { accessToken, user } = res.data;
 
   if (user.role !== 'DRIVER') {
     throw new Error('Not a driver account');
   }
 
-  await SecureStore.setItemAsync('access_token', access_token);
+  await SecureStore.setItemAsync('access_token', accessToken);
   await SecureStore.setItemAsync('user', JSON.stringify(user));
 
   return user;

@@ -26,7 +26,7 @@ export default function InvoicesScreen() {
   const { data: invoiceableJobs = [], refetch: refetchJobs } = useQuery({
     queryKey: ['invoiceable-jobs'],
     queryFn: async () => {
-      const res = await api.get('/invoices/driver/invoiceable');
+      const res = await api.get('/driver-app/invoices/invoiceable');
       return res.data;
     },
   });
@@ -38,13 +38,13 @@ export default function InvoicesScreen() {
   } = useQuery({
     queryKey: ['driver-invoices'],
     queryFn: async () => {
-      const res = await api.get('/invoices/driver');
+      const res = await api.get('/driver-app/invoices');
       return res.data;
     },
   });
 
   const createMutation = useMutation({
-    mutationFn: () => api.post('/invoices/driver', { booking_ids: selectedBookings }),
+    mutationFn: () => api.post('/driver-app/invoices', { assignment_ids: selectedBookings }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoiceable-jobs'] });
@@ -55,7 +55,7 @@ export default function InvoicesScreen() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (invoice_id: string) => api.patch(`/invoices/driver/${invoice_id}/submit`),
+    mutationFn: (invoice_id: string) => api.patch(`/driver-app/invoices/${invoice_id}/submit`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-invoices'] });
       Alert.alert('📤 Invoice Submitted', 'Your invoice has been sent to the operator.');

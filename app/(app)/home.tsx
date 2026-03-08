@@ -41,8 +41,8 @@ export default function HomeScreen() {
   } = useQuery({
     queryKey: ['driver-active-jobs'],
     queryFn: async () => {
-      const res = await api.get('/bookings/driver', {
-        params: { active: true },
+      const res = await api.get('/driver-app/assignments', {
+        params: { filter: 'active' },
       });
       return res.data?.data ?? res.data ?? [];
     },
@@ -50,14 +50,16 @@ export default function HomeScreen() {
   });
 
   const acceptMutation = useMutation({
-    mutationFn: (booking_id: string) => api.patch(`/bookings/driver/${booking_id}/accept`),
+    mutationFn: (assignment_id: string) =>
+      api.patch(`/driver-app/assignments/${assignment_id}/status`, { new_status: 'ACCEPTED' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-active-jobs'] });
     },
   });
 
   const declineMutation = useMutation({
-    mutationFn: (booking_id: string) => api.patch(`/bookings/driver/${booking_id}/decline`),
+    mutationFn: (assignment_id: string) =>
+      api.patch(`/driver-app/assignments/${assignment_id}/status`, { new_status: 'REJECTED' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-active-jobs'] });
     },
