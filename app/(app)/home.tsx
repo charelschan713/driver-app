@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   RefreshControl,
-  Switch,
+
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,7 +28,7 @@ const DRIVER_STATUS_COLORS: Record<string, string> = {
 export default function HomeScreen() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState<any>(null);
-  const [isAvailable, setIsAvailable] = useState(true);
+
 
   useEffect(() => {
     getStoredUser().then(setUser);
@@ -114,15 +114,7 @@ export default function HomeScreen() {
                 : '✅ No pending jobs'}
           </Text>
         </View>
-        <View style={styles.availableToggle}>
-          <Text style={styles.availableLabel}>{isAvailable ? 'Online' : 'Offline'}</Text>
-          <Switch
-            value={isAvailable}
-            onValueChange={setIsAvailable}
-            trackColor={{ false: '#e0e0e0', true: '#22c55e' }}
-            thumbColor="#fff"
-          />
-        </View>
+
       </View>
 
       <ScrollView
@@ -253,7 +245,7 @@ export default function HomeScreen() {
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🛣️</Text>
             <Text style={styles.emptyTitle}>No jobs right now</Text>
-            <Text style={styles.emptySubtitle}>Stay online to receive new job requests</Text>
+            <Text style={styles.emptySubtitle}>No pending jobs at the moment</Text>
           </View>
         )}
 
@@ -288,14 +280,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 2,
   },
-  availableToggle: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  availableLabel: {
-    fontSize: 11,
-    color: '#666',
-  },
+
   scroll: {
     flex: 1,
   },
