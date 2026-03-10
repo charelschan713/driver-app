@@ -12,12 +12,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../src/lib/api';
-import { getStoredUser, logout, clearCompany } from '../../src/lib/auth';
+import { logout, clearCompany } from '../../src/lib/auth';
 import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState<any>(null);
   const [editing, setEditing] = useState(false);
 
   const [abn, setAbn] = useState('');
@@ -28,10 +27,8 @@ export default function ProfileScreen() {
   const [abnVerified, setAbnVerified] = useState(false);
   const [abnName, setAbnName] = useState('');
 
-  useEffect(() => {
-    getStoredUser().then(setUser);
-  }, []);
-
+  // Driver identity from server — useQuery fetches /driver-app/me directly.
+  // getStoredUser() removed (stale — auth.ts no longer writes 'user' key).
   const { data: driver } = useQuery({
     queryKey: ['driver-profile'],
     queryFn: async () => {

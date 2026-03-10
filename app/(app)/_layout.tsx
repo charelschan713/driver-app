@@ -6,6 +6,11 @@ import * as Notifications from 'expo-notifications';
 import { useQueryClient } from '@tanstack/react-query';
 import * as SecureStore from 'expo-secure-store';
 import api from '../../src/lib/api';
+import {
+  DriverSessionProvider,
+  normalizeDriverSession,
+  type DriverSession,
+} from '../../src/context/DriverSessionContext';
 
 // ── Platform design tokens ──────────────────────────────────────────────────
 const BG   = '#0D0F14';
@@ -36,6 +41,7 @@ export default function AppLayout() {
   const notificationListener = useRef<Notifications.EventSubscription | null>(null);
   const responseListener = useRef<Notifications.EventSubscription | null>(null);
   const [guardDone, setGuardDone] = useState(false);
+  const [driverSession, setDriverSession] = useState<DriverSession | null>(null);
 
   // ── Driver role guard ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -51,7 +57,10 @@ export default function AppLayout() {
       // This endpoint JOINs memberships WHERE role = 'driver' —
       // non-driver users receive 404 here even with a valid token.
       try {
-        await api.get('/driver-app/me');
+        const { data } = await api.get('/driver-app/me');
+        // Store identity in context — all child screens read from here.
+        // This eliminates the stale getStoredUser() / SecureStore 'user' key pattern.
+        setDriverSession(normalizeDriverSession(data));
         setGuardDone(true);
       } catch (err: any) {
         // 401 → token expired/invalid; 404 → not a driver account
@@ -92,6 +101,7 @@ export default function AppLayout() {
   }
 
   return (
+    <DriverSessionProvider driver={driverSession}>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -142,6 +152,7 @@ export default function AppLayout() {
         }}
       />
     </Tabs>
+    </DriverSessionProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import api from '../../src/lib/api';
-import { getStoredUser } from '../../src/lib/auth';
+import { useDriverSession } from '../../src/context/DriverSessionContext';
 
 const DRIVER_STATUS_COLORS: Record<string, string> = {
   UNASSIGNED: '#999',
@@ -27,12 +27,9 @@ const DRIVER_STATUS_COLORS: Record<string, string> = {
 
 export default function HomeScreen() {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState<any>(null);
-
-
-  useEffect(() => {
-    getStoredUser().then(setUser);
-  }, []);
+  // Driver identity from DriverSessionContext — set by guard in (app)/_layout.tsx
+  // after /driver-app/me succeeds. No async SecureStore reads needed here.
+  const driver = useDriverSession();
 
   const {
     data: activeJobs = [],
@@ -105,7 +102,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Hello, {user?.first_name ?? 'Driver'} 👋</Text>
+          <Text style={styles.greeting}>Hello, {driver?.first_name ?? 'Driver'} 👋</Text>
           <Text style={styles.subGreeting}>
             {activeJob
               ? '🟢 You have an active job'
