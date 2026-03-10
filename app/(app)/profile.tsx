@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../src/lib/api';
-import { getStoredUser, logout } from '../../src/lib/auth';
+import { getStoredUser, logout, clearCompany } from '../../src/lib/auth';
 import { router } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -97,6 +97,24 @@ export default function ProfileScreen() {
         },
       },
     ]);
+  };
+
+  const handleSwitchCompany = () => {
+    Alert.alert(
+      'Switch Company',
+      'This will sign you out and clear your remembered Company ID. You will need to enter a new Company ID on the next login.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Switch Company',
+          style: 'destructive',
+          onPress: async () => {
+            await clearCompany();
+            router.replace('/login');
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -299,6 +317,9 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
+          <TouchableOpacity style={styles.switchCompanyButton} onPress={handleSwitchCompany}>
+            <Text style={styles.switchCompanyText}>Switch Company</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.signOutButton} onPress={handleLogout}>
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
@@ -427,6 +448,16 @@ const styles = StyleSheet.create({
   },
   saveButtonText: { color: '#fff', fontSize: 15, fontWeight: '700' },
   section: { paddingHorizontal: 16, marginBottom: 12 },
+  switchCompanyButton: {
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    marginBottom: 10,
+  },
+  switchCompanyText: { color: '#374151', fontSize: 15, fontWeight: '600' },
   signOutButton: {
     backgroundColor: '#fff',
     borderRadius: 14,
