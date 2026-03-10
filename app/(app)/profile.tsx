@@ -37,6 +37,14 @@ export default function ProfileScreen() {
     },
   });
 
+  // /driver-app/me returns full_name — derive first/last for display.
+  // phone is phone_country_code + phone_number (no combined 'phone' field).
+  const driverFirstName = driver?.full_name?.split(' ')[0] ?? '';
+  const driverLastName  = driver?.full_name?.split(' ').slice(1).join(' ') ?? '';
+  const driverPhone     = driver?.phone_number
+    ? `${driver.phone_country_code ?? ''}${driver.phone_number}`
+    : '';
+
   useEffect(() => {
     if (!driver) return;
     setAbn(driver.abn ?? '');
@@ -124,14 +132,14 @@ export default function ProfileScreen() {
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
-              {driver?.first_name?.[0]}
-              {driver?.last_name?.[0]}
+              {driverFirstName?.[0]}
+              {driverLastName?.[0]}
             </Text>
           </View>
           <Text style={styles.driverName}>
-            {driver?.first_name} {driver?.last_name}
+            {driverFirstName} {driverLastName}
           </Text>
-          <Text style={styles.driverPhone}>{driver?.phone}</Text>
+          <Text style={styles.driverPhone}>{driverPhone}</Text>
           <View
             style={[
               styles.verifiedBadge,
